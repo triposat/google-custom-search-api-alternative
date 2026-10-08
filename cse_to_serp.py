@@ -40,10 +40,12 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
         if not error and resp.status_code not in RETRY_STATUSES:
             break  # wrong key, zone, or URL: retrying will not help
         if attempt < attempts - 1:
-            # Back off before resending the same query.
+            # Back off 15+ s before resending the same query.
             time.sleep(16 + attempt * 10)
     resp.raise_for_status()
-    raise RuntimeError(f"SERP API error: {error or resp.status_code}")
+    code = (resp.headers.get("x-brd-error-code")  # maps to the error catalog
+            or resp.headers.get("x-brd-err-code"))
+    raise RuntimeError(f"SERP API error {code}: {error or resp.status_code}")
 
 
 def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
@@ -82,7 +84,8 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
     first = start - 1
     offset = first // 10 * 10  # the Google page that holds `start`
     items, next_start = [], None
-    for _ in range(math.ceil((num + first - offset) / 10)):  # 1 request per page
+    # Pages that cover positions first to first + num - 1, 1 request each
+    for _ in range(math.ceil((num + first - offset) / 10)):
         params["start"] = offset
         page = fetch_serp(params, attempts, timeout)
         for i, result in enumerate(page.get("organic", [])):

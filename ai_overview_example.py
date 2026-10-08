@@ -13,7 +13,7 @@ page = fetch_serp({
 overview = page.get("ai_overview") or {}
 print("AI Overview text blocks:", len(overview.get("texts", [])))
 print("AI Overview sources:", len(overview.get("references", [])))
-questions = dict.fromkeys(
+questions = dict.fromkeys(  # keeps each question once, in order
     item["question"] for item in page.get("people_also_ask", [])
     if item.get("question")
 )
