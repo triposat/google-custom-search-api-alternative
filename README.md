@@ -59,7 +59,7 @@ At each call site, replace `except HttpError` with `except (httpx.HTTPError, Val
 | Custom Search JSON API | Google search URL through the SERP API |
 |---|---|
 | `q` | `q` |
-| `num` (maximum 10) | No equivalent. Google returns about 10 results per page, so the adapter requests more pages |
+| `num` (maximum 10) | Dropped by Google. Each Google page holds about 10 results, so the adapter requests more pages |
 | `start` (counts from 1) | `start` (counts from 0, in steps of 10) |
 | `gl` (boosts results from a country) | `gl` (runs the search as that country) |
 | `hl` | `hl` |
