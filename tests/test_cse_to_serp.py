@@ -1,6 +1,7 @@
 """Offline tests for cse_to_serp.py. No API key or network needed."""
 
 import json
+from urllib.parse import parse_qs, urlparse
 
 import httpx
 import pytest
@@ -61,8 +62,22 @@ def test_num_10_costs_one_request_per_call(transport):
 
 def test_unmapped_parameter_raises(transport):
     transport(fake_google()[0])
-    with pytest.raises(ValueError):
-        cse_to_serp.cse_list(q="x", exactTerms="y")
+    with pytest.raises(TypeError):
+        cse_to_serp.cse_list(q="x", lr="lang_en")
+
+
+def test_filters_become_query_operators(transport):
+    sent = []
+
+    def handler(request):
+        sent.append(json.loads(request.content)["url"])
+        return fake_google()[0](request)
+
+    transport(handler)
+    cse_to_serp.cse_list(q="loop", exactTerms="asyncio", excludeTerms="twisted",
+                         fileType="pdf", siteSearch="a.com", siteSearchFilter="e")
+    q = parse_qs(urlparse(sent[0]).query)["q"][0]
+    assert q == 'loop "asyncio" -"twisted" filetype:pdf -site:a.com'
 
 
 def test_cx_is_ignored(transport):

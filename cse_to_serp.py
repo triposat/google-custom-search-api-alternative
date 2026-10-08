@@ -39,14 +39,22 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
 
 
 def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
-             dateRestrict=None, safe="off", searchType=None, attempts=4,
-             timeout=60, **extra):
+             siteSearchFilter="i", exactTerms=None, excludeTerms=None,
+             fileType=None, dateRestrict=None, safe="off", searchType=None,
+             attempts=4, timeout=60, **extra):
     """Accept cse.list() parameters, return a cse.list()-shaped dict."""
     extra.pop("cx", None)  # no engine ID: every call searches Google
     if extra:  # fail loudly instead of dropping a filter
-        raise ValueError(f"No mapping for: {sorted(extra)}")
+        raise TypeError(f"No mapping for: {sorted(extra)}")
+    if exactTerms:  # Custom Search filters become Google search operators
+        q = f'{q} "{exactTerms}"'
+    if excludeTerms:
+        q = f'{q} -"{excludeTerms}"'
+    if fileType:
+        q = f"{q} filetype:{fileType}"
     if siteSearch:
-        q = f"{q} site:{siteSearch}"
+        exclude = "-" if siteSearchFilter == "e" else ""
+        q = f"{q} {exclude}site:{siteSearch}"
     params = {"q": q, "brd_json": 1}  # brd_json=1 returns parsed JSON
     if gl:
         params["gl"] = gl

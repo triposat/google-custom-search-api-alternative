@@ -62,7 +62,10 @@ At each call site, replace `except HttpError` with `except (httpx.HTTPError, Val
 | `start` (counts from 1) | `start` (counts from 0, in steps of 10) |
 | `gl` (boosts results from a country) | `gl` (runs the search as that country) |
 | `hl` | `hl` |
-| `siteSearch=example.com` | `site:example.com` added to `q` |
+| `siteSearch=example.com` | `site:example.com` added to `q` (`-site:` with `siteSearchFilter=e`) |
+| `exactTerms=a b` | `"a b"` added to `q` |
+| `excludeTerms=a` | `-"a"` added to `q` |
+| `fileType=pdf` | `filetype:pdf` added to `q` |
 | `dateRestrict=d7` | `tbs=qdr:d7` |
 | `safe=active` | `safe=active` |
 | `searchType=image` | `udm=2` (Google Images) |
