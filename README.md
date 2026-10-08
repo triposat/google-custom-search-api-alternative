@@ -22,6 +22,7 @@ You need a Bright Data account, a SERP API zone, and an API key. The [SERP API q
 The adapter needs Python 3.9 or newer. The LangChain tool needs Python 3.10 or newer, because `langchain-core` does.
 
 ```bash
+python -m venv .venv && source .venv/bin/activate
 export BRIGHTDATA_API_KEY="your-api-key"
 export BRIGHTDATA_SERP_ZONE="serp_api1"
 python -m pip install -r requirements.txt
