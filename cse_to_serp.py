@@ -3,6 +3,7 @@
 Same cse.list() parameters and core items fields.
 """
 
+import math
 import os
 import time
 from urllib.parse import urlencode, urlparse
@@ -81,7 +82,7 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
     first = start - 1
     offset = first // 10 * 10  # the Google page that holds `start`
     items, next_start = [], None
-    for _ in range(-(-(num + first - offset) // 10)):  # 1 request per page
+    for _ in range(math.ceil((num + first - offset) / 10)):  # 1 request per page
         params["start"] = offset
         page = fetch_serp(params, attempts, timeout)
         for i, result in enumerate(page.get("organic", [])):
