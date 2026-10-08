@@ -51,7 +51,9 @@ async def fetch(client: httpx.AsyncClient, params: dict, ttl: int) -> dict:
             resp.raise_for_status()
             break
         await asyncio.sleep(16 + attempt * 10)  # back off before retrying
-    raise RuntimeError(f"SERP API error: {error or resp.status_code}")
+    code = (resp.headers.get("x-brd-error-code")  # maps to the error catalog
+            or resp.headers.get("x-brd-err-code"))
+    raise RuntimeError(f"SERP API error {code}: {error or resp.status_code}")
 
 
 async def search_many(queries, concurrency=20, deadline=150,

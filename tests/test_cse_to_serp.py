@@ -80,9 +80,10 @@ def test_filters_become_query_operators(transport):
     assert q == 'loop "asyncio" -"twisted" filetype:pdf -site:a.com'
 
 
-def test_cx_is_ignored(transport):
+def test_cx_is_ignored_with_a_warning(transport):
     transport(fake_google()[0])
-    assert cse_to_serp.cse_list(q="x", cx="abc")["items"]
+    with pytest.warns(UserWarning, match="cx is ignored"):
+        assert cse_to_serp.cse_list(q="x", cx="abc")["items"]
 
 
 def test_error_header_is_retried(transport):

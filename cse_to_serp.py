@@ -6,6 +6,7 @@ Same cse.list() parameters and core items fields.
 import math
 import os
 import time
+import warnings
 from urllib.parse import urlencode, urlparse
 
 import httpx
@@ -53,7 +54,9 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
              fileType=None, dateRestrict=None, safe="off", searchType=None,
              attempts=4, timeout=60, **extra):
     """Accept cse.list() parameters, return a cse.list()-shaped dict."""
-    extra.pop("cx", None)  # no engine ID: every call searches Google
+    if extra.pop("cx", None):  # no engine ID: every call searches Google
+        warnings.warn("cx is ignored: add (site:a.com OR site:b.com) to q "
+                      "if your engine searched a fixed list of sites")
     if extra:  # fail loudly instead of dropping a filter
         raise TypeError(f"No mapping for: {sorted(extra)}")
     if exactTerms:  # Custom Search filters become Google search operators
