@@ -45,7 +45,7 @@ from cse_to_serp import cse_list
 # Before: Google API client
 # res = service.cse().list(q=query, cx=CX, num=10).execute()
 
-# After: same items shape, no engine ID, gl and hl set explicitly
+# After: same core items fields, no engine ID, gl and hl set explicitly
 res = cse_list(q=query, num=10, gl="us", hl="en")
 for item in res["items"]:
     print(item["title"], item["link"])

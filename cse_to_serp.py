@@ -1,6 +1,6 @@
 """Replace Google Custom Search JSON API calls with the Bright Data SERP API.
 
-Same cse.list() parameters and items shape.
+Same cse.list() parameters and core items fields.
 """
 
 import os
@@ -21,7 +21,14 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
     body = {"zone": ZONE, "url": url, "format": "raw"}
     headers = {"Authorization": f"Bearer {API_KEY}"}
     for attempt in range(attempts):
-        resp = httpx.post(API_URL, json=body, headers=headers, timeout=timeout)
+        try:
+            resp = httpx.post(API_URL, json=body, headers=headers,
+                              timeout=timeout)
+        except httpx.TransportError:  # timeout or dropped connection
+            if attempt == attempts - 1:
+                raise
+            time.sleep(16 + attempt * 10)
+            continue
         error = (resp.headers.get("x-brd-error")  # API-level errors
                  or resp.headers.get("x-brd-err-msg"))  # proxy-level errors
         if resp.status_code == 200 and not error:

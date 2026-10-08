@@ -14,7 +14,8 @@ overview = page.get("ai_overview") or {}
 print("AI Overview text blocks:", len(overview.get("texts", [])))
 print("AI Overview sources:", len(overview.get("references", [])))
 questions = dict.fromkeys(
-    item.get("question") for item in page.get("people_also_ask", [])
+    item["question"] for item in page.get("people_also_ask", [])
+    if item.get("question")
 )
 for question in list(questions)[:2]:
     print("People also ask:", question)

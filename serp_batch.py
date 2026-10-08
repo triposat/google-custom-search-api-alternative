@@ -28,11 +28,19 @@ async def fetch(client: httpx.AsyncClient, params: dict, ttl: int) -> dict:
         return cached[1]
     body = {"zone": ZONE, "url": url, "format": "raw"}
     for attempt in range(4):
-        resp = await client.post(API_URL, json=body)
+        try:
+            resp = await client.post(API_URL, json=body)
+        except httpx.TransportError:  # timeout or dropped connection
+            if attempt == 3:
+                raise
+            await asyncio.sleep(16 + attempt * 10)
+            continue
         error = (resp.headers.get("x-brd-error")  # API-level errors
                  or resp.headers.get("x-brd-err-msg"))  # proxy-level errors
         if resp.status_code == 200 and not error:
             page = resp.json()
+            if "general" not in page:  # not a parsed results page
+                raise ValueError("Unexpected response: " + resp.text[:200])
             if page.get("organic"):
                 CACHE[url] = (time.monotonic(), page)
             else:

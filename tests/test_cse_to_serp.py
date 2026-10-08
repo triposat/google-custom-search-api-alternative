@@ -95,6 +95,21 @@ def test_error_header_is_retried(transport):
     assert cse_to_serp.cse_list(q="x")["items"][0]["link"] == "https://a.com"
 
 
+def test_timeout_is_retried(transport):
+    responses = iter([None, httpx.Response(200, json={
+        "general": {}, "organic": [{"title": "t", "link": "https://a.com"}],
+        "pagination": {}})])
+
+    def handler(request):
+        resp = next(responses)
+        if resp is None:
+            raise httpx.ReadTimeout("timed out", request=request)
+        return resp
+
+    transport(handler)
+    assert cse_to_serp.cse_list(q="x")["items"][0]["link"] == "https://a.com"
+
+
 def test_bad_key_fails_fast(transport):
     calls = []
 
