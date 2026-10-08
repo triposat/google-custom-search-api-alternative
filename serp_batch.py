@@ -16,7 +16,7 @@ API_KEY = os.environ["BRIGHTDATA_API_KEY"]
 ZONE = os.environ.get("BRIGHTDATA_SERP_ZONE", "serp_api1")
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 
-CACHE: dict[str, tuple[float, dict]] = {}  # use Redis or similar in prod
+CACHE: dict[str, tuple[float, dict]] = {}  # swap in Redis to share it across workers
 STATS = {"queries": 0, "cache_hits": 0, "empty": 0, "failed": 0}
 
 
