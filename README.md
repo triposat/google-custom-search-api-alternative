@@ -69,8 +69,8 @@ The adapter ignores `cx`, because there is no engine on the Google side. Any oth
 
 ## Behavior to know
 
-- Bright Data reports API-level errors in the `x-brd-error` and `x-brd-error-code` headers, and the HTTP status can still be 200. The code checks those headers before parsing and retries after at least 15 seconds, as the [SERP API error catalog](https://docs.brightdata.com/products/serp-api/debugging) asks.
-- With `num=10`, following `nextPage` costs 1 request per call. A smaller `num` fetches the same Google page more than once.
+- The code reads Bright Data's `x-brd-error` headers before parsing and retries after at least 15 seconds, as the [SERP API error catalog](https://docs.brightdata.com/products/serp-api/debugging) describes.
+- With `num=10`, following `nextPage` costs 1 request per call.
 - Pages fetched in separate calls can share a URL, because Google's ranking can change between calls. Dedupe by URL when you merge pages.
 - Catch `httpx.HTTPError`, `ValueError`, and `RuntimeError` where you previously caught `HttpError` from the Google client.
 

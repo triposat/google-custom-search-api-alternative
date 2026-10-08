@@ -8,7 +8,7 @@ from cse_to_serp import cse_list
 @tool
 def google_search(query: str) -> list[dict]:
     """Search Google and return the top results with title, link, snippet."""
-    try:  # 2 attempts with a 20 s timeout keep the agent from stalling
+    try:  # 2 attempts and a 20 s timeout bound each search
         return cse_list(q=query, num=10, gl="us", hl="en",
                         attempts=2, timeout=20)["items"]
     except Exception as exc:
