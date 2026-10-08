@@ -1,7 +1,7 @@
 """Run many Google queries through the Bright Data SERP API.
 
-Production guards: bounded concurrency, a deadline per query, a cache
-with a time limit, and counters for empty and failed queries.
+Adds bounded concurrency, a deadline per query, a cache with a time
+limit, and counters for empty and failed queries.
 """
 
 import asyncio
@@ -36,13 +36,13 @@ async def fetch(client: httpx.AsyncClient, params: dict, ttl: int) -> dict:
             if page.get("organic"):
                 CACHE[url] = (time.monotonic(), page)
             else:
-                STATS["empty"] += 1  # alert when this rate jumps
+                STATS["empty"] += 1
             return page
         fatal = not error and resp.status_code not in RETRY_STATUSES
         if fatal or attempt == 3:
             resp.raise_for_status()
             break
-        await asyncio.sleep(16 + attempt * 10)  # docs: 15+ s before retry
+        await asyncio.sleep(16 + attempt * 10)  # back off before retrying
     raise RuntimeError(f"SERP API error: {error or resp.status_code}")
 
 
@@ -58,7 +58,7 @@ async def search_many(queries, concurrency=20, deadline=150,
             try:
                 page = await asyncio.wait_for(
                     fetch(client, {"q": query, "brd_json": 1, **params}, ttl),
-                    timeout=deadline,  # caps retries and waits together
+                    timeout=deadline,  # caps the total time for one query
                 )
                 return query, page
             except (asyncio.TimeoutError, httpx.HTTPError, ValueError,

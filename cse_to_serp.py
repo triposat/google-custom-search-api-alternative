@@ -32,8 +32,7 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
         if not error and resp.status_code not in RETRY_STATUSES:
             break  # wrong key, zone, or URL: retrying will not help
         if attempt < attempts - 1:
-            # The docs say failed requests are not billed, and ask for at
-            # least 15 seconds before the same query string is sent again.
+            # Back off before resending the same query.
             time.sleep(16 + attempt * 10)
     resp.raise_for_status()
     raise RuntimeError(f"SERP API error: {error or resp.status_code}")
@@ -41,11 +40,11 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
 
 def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
              dateRestrict=None, safe="off", searchType=None, attempts=4,
-             timeout=60, **unsupported):
+             timeout=60, **extra):
     """Accept cse.list() parameters, return a cse.list()-shaped dict."""
-    unsupported.pop("cx", None)  # no engine ID: every call searches Google
-    if unsupported:  # fail loudly instead of dropping a filter
-        raise ValueError(f"Not mapped yet: {sorted(unsupported)}")
+    extra.pop("cx", None)  # no engine ID: every call searches Google
+    if extra:  # fail loudly instead of dropping a filter
+        raise ValueError(f"No mapping for: {sorted(extra)}")
     if siteSearch:
         q = f"{q} site:{siteSearch}"
     params = {"q": q, "brd_json": 1}  # brd_json=1 returns parsed JSON
@@ -60,7 +59,7 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
     if searchType == "image":
         return image_list(params, num, start, attempts, timeout)
     if searchType:
-        raise ValueError(f"Not mapped yet: searchType={searchType}")
+        raise ValueError(f"No mapping for: searchType={searchType}")
 
     # Custom Search counts from 1 (start=11 is page 2), Google from 0
     # (start=10 is page 2). Track each result's Google position.

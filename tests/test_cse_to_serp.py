@@ -70,9 +70,9 @@ def test_cx_is_ignored(transport):
     assert cse_to_serp.cse_list(q="x", cx="abc")["items"]
 
 
-def test_api_error_header_on_200_is_retried(transport):
+def test_error_header_is_retried(transport):
     responses = iter([
-        httpx.Response(200, text="captcha", headers={"x-brd-error": "captcha"}),
+        httpx.Response(200, text="error", headers={"x-brd-error": "test error"}),
         httpx.Response(200, json={"general": {}, "organic": [
             {"title": "t", "link": "https://a.com"}], "pagination": {}}),
     ])

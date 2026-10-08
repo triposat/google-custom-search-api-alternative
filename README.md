@@ -51,6 +51,8 @@ for item in res["items"]:
     print(item["title"], item["link"])
 ```
 
+At each call site, replace `except HttpError` with `except (httpx.HTTPError, ValueError, RuntimeError)`.
+
 ## Parameter mapping
 
 | Custom Search JSON API | Google search URL through the SERP API |
@@ -66,12 +68,6 @@ for item in res["items"]:
 | `searchType=image` | `udm=2` (Google Images) |
 
 The adapter ignores `cx`, because there is no engine on the Google side. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
-
-## Behavior to know
-
-- The code reads Bright Data's `x-brd-error` headers before parsing and retries after at least 15 seconds, as the [SERP API error catalog](https://docs.brightdata.com/products/serp-api/debugging) describes.
-- With `num=10`, following `nextPage` costs 1 request per call.
-- Catch `httpx.HTTPError`, `ValueError`, and `RuntimeError` where you previously caught `HttpError` from the Google client.
 
 ## Tests
 
