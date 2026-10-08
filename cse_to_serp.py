@@ -1,6 +1,6 @@
 """Replace Google Custom Search JSON API calls with the Bright Data SERP API.
 
-Same cse.list() parameters and items shape. Unmapped parameters raise.
+Same cse.list() parameters and items shape.
 """
 
 import os

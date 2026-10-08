@@ -65,13 +65,12 @@ for item in res["items"]:
 | `safe=active` | `safe=active` |
 | `searchType=image` | `udm=2` (Google Images) |
 
-The adapter ignores `cx`, because there is no engine on the Google side. Any other Custom Search parameter raises a `ValueError` instead of being dropped. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
+The adapter ignores `cx`, because there is no engine on the Google side. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
 
 ## Behavior to know
 
 - The code reads Bright Data's `x-brd-error` headers before parsing and retries after at least 15 seconds, as the [SERP API error catalog](https://docs.brightdata.com/products/serp-api/debugging) describes.
 - With `num=10`, following `nextPage` costs 1 request per call.
-- Pages fetched in separate calls can share a URL, because Google's ranking can change between calls. Dedupe by URL when you merge pages.
 - Catch `httpx.HTTPError`, `ValueError`, and `RuntimeError` where you previously caught `HttpError` from the Google client.
 
 ## Tests
