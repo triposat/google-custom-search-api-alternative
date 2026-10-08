@@ -1,11 +1,6 @@
-"""Replacement for Google Custom Search JSON API calls.
+"""Replace Google Custom Search JSON API calls with the Bright Data SERP API.
 
-cse_list() takes the Custom Search parameters it maps (q, num, start,
-gl, hl, siteSearch, dateRestrict, safe, searchType="image") and returns
-a response in the same shape (items with title, link, snippet,
-displayLink, and queries.nextPage), fetched from Google Search through
-the Bright Data SERP API. Any other parameter raises an error instead
-of being dropped.
+Same cse.list() parameters and items shape. Unmapped parameters raise.
 """
 
 import os
