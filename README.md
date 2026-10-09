@@ -19,7 +19,7 @@ Google closed the Custom Search JSON API to new customers, and existing customer
 
 You need a Bright Data account, a SERP API zone, and an API key. The [SERP API quickstart](https://docs.brightdata.com/products/serp-api/quickstart) shows where to create the zone and find the key.
 
-The adapter needs Python 3.9 or newer. The LangChain tool needs Python 3.10 or newer, because `langchain-core` does.
+The adapter runs on Python 3.9 through 3.14. The LangChain tool needs Python 3.10 or newer, because `langchain-core` does.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
