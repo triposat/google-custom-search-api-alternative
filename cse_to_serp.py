@@ -56,11 +56,11 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
              siteSearchFilter="i", exactTerms=None, excludeTerms=None,
              fileType=None, dateRestrict=None, safe="off", searchType=None,
              attempts=4, timeout=60, **extra):
-    """Accept cse.list() parameters, return a cse.list()-shaped dict."""
+    """Accept cse.list() parameters, return a dict in cse.list() format."""
     if extra.pop("cx", None):  # no engine ID, so every call searches Google
         warnings.warn("cx is ignored. Add (site:a.com OR site:b.com) to q "
                       "if your engine searched a fixed list of sites")
-    if extra:  # fail loudly instead of dropping a filter
+    if extra:  # fail loudly instead of ignoring a filter
         raise TypeError(f"No mapping for: {sorted(extra)}")
     if exactTerms:  # Custom Search filters become Google search operators
         q = f'{q} "{exactTerms}"'
@@ -88,9 +88,9 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
     # Custom Search counts from 1 (start=11 is page 2), Google from 0
     # (start=10 is page 2). Track each result's Google position.
     first = start - 1
-    offset = first // 10 * 10  # the Google page that holds `start`
+    offset = first // 10 * 10  # the Google page that contains `start`
     items, next_start = [], None
-    # Pages that cover positions first to first + num - 1, 1 request each
+    # Fetch the pages for positions first to first + num - 1, 1 request each
     for _ in range(math.ceil((num + first - offset) / 10)):
         params["start"] = offset
         page = fetch_serp(params, attempts, timeout)
@@ -99,7 +99,7 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
             if position < first or not result.get("link"):
                 continue
             if len(items) == num:
-                next_start = position + 1  # back to 1-based
+                next_start = position + 1  # convert to 1-based
                 break
             items.append({
                 "title": result.get("title", ""),
