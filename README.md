@@ -56,22 +56,22 @@ Where you caught `HttpError`, catch `(httpx.HTTPError, ValueError, RuntimeError)
 
 ## Parameter mapping
 
-| Custom Search JSON API | Google search URL through the SERP API |
+| Custom Search JSON API | Google, through the SERP API |
 |---|---|
 | `q` | `q` |
-| `num` (maximum 10) | Dropped by Google. Each Google page holds about 10 results, so the adapter requests more pages |
+| `num` (maximum 10) | Removed by Google. Each Google page contains about 10 results, so the adapter requests more pages |
 | `start` (counts from 1) | `start` (counts from 0, in steps of 10) |
-| `gl` (boosts results from a country) | `gl` (runs the search as that country) |
+| `gl` (boosts results from a country) | `gl` (runs the search as a user in that country) |
 | `hl` | `hl` |
 | `siteSearch=example.com` | `site:example.com` added to `q` (`-site:` with `siteSearchFilter=e`) |
 | `exactTerms=a b` | `"a b"` added to `q` |
 | `excludeTerms=a` | `-"a"` added to `q` |
 | `fileType=pdf` | `filetype:pdf` added to `q` |
-| `dateRestrict=d7` | `tbs=qdr:d7` |
+| `dateRestrict=d7` | `tbs=qdr:d7`, and the same for `w`, `m`, and `y` |
 | `safe=active` | `safe=active` |
 | `searchType=image` | `udm=2` (Google Images) |
 
-The adapter ignores `cx` with a warning, because there is no engine on the Google side. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
+The adapter ignores `cx` with a warning, because Google search has no engine ID. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
 
 ## Tests
 
