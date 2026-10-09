@@ -1,2 +1,2 @@
 -r requirements.txt
-langchain-core>=1.0  # needs Python 3.10 or newer
+langchain-core>=1.0

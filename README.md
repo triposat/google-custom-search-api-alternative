@@ -2,7 +2,7 @@
 
 Companion code for the Bright Data article [Is There a Google Search API? Options After Custom Search](https://brightdata.com/blog/web-data/is-there-a-google-search-api).
 
-Google closed the Custom Search JSON API to new customers, and existing customers lose access on January 1, 2027. This repo moves Custom Search code to Google results fetched through the [Bright Data SERP API](https://brightdata.com/products/serp-api), with the same `cse.list()` parameter names and `items` response shape.
+Google closed the Custom Search JSON API to new customers, with access for existing customers ending on January 1, 2027. This repo moves Custom Search code to Google results fetched through the [Bright Data SERP API](https://brightdata.com/products/serp-api), with the same `cse.list()` parameter names and `items` response shape.
 
 ## Files
 
@@ -19,7 +19,7 @@ Google closed the Custom Search JSON API to new customers, and existing customer
 
 You need a Bright Data account, a SERP API zone, and an API key. The [SERP API quickstart](https://docs.brightdata.com/products/serp-api/quickstart) shows where to create the zone and find the key.
 
-The adapter runs on Python 3.9 through 3.14. The LangChain tool needs Python 3.10 or newer, because `langchain-core` does.
+The adapter runs on Python 3.9 and later. For the LangChain tool, `requirements-langchain.txt` pins `langchain-core>=1.0`, and pip checks your Python version against it.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
