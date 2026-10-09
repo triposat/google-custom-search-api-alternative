@@ -12,7 +12,10 @@ from urllib.parse import urlencode, urlparse
 import httpx
 
 API_URL = "https://api.brightdata.com/request"
-API_KEY = os.environ["BRIGHTDATA_API_KEY"]
+API_KEY = os.environ.get("BRIGHTDATA_API_KEY")
+if not API_KEY:
+    raise RuntimeError("Set the BRIGHTDATA_API_KEY environment variable "
+                       "to your Bright Data API key (step 1).")
 ZONE = os.environ.get("BRIGHTDATA_SERP_ZONE", "serp_api1")
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 

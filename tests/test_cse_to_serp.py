@@ -137,3 +137,12 @@ def test_image_search_slices_one_response(transport):
     res = cse_to_serp.cse_list(q="x", searchType="image", num=10, start=11)
     assert [i["link"] for i in res["items"]][0].endswith("/10.jpg")
     assert "udm=2" in calls[0] and len(calls) == 1
+
+
+def test_missing_key_gives_a_clear_message(monkeypatch):
+    import importlib
+    monkeypatch.delenv("BRIGHTDATA_API_KEY", raising=False)
+    with pytest.raises(RuntimeError, match="Set the BRIGHTDATA_API_KEY"):
+        importlib.reload(cse_to_serp)
+    monkeypatch.setenv("BRIGHTDATA_API_KEY", "test-key")
+    importlib.reload(cse_to_serp)
