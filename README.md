@@ -2,14 +2,14 @@
 
 Companion code for the Bright Data article [Is There a Google Search API? Options After Custom Search](https://brightdata.com/blog/web-data/is-there-a-google-search-api).
 
-Google closed the Custom Search JSON API to new customers, with access for existing customers ending on January 1, 2027. This repo moves Custom Search code to Google results fetched through the [Bright Data SERP API](https://brightdata.com/products/serp-api), with the same `cse.list()` parameter names and `items` response shape.
+Google closed the Custom Search JSON API to new customers, with access for existing customers ending on January 1, 2027. This repo moves Custom Search code to Google results fetched through the [Bright Data SERP API](https://brightdata.com/products/serp-api), with `cse.list()`-style parameters and `items` responses.
 
 ## Files
 
 | File | What it does |
 |---|---|
 | `cse_to_serp.py` | `cse_list()` accepts Custom Search parameters and returns a Custom Search-shaped response (`items`, `queries.nextPage`) |
-| `serp_batch.py` | Runs many queries with a concurrency limit, a deadline per query, a cache, and counters for empty and failed queries |
+| `serp_batch.py` | Runs many queries in parallel, with a concurrency setting, a deadline per query, a cache, and counters for cache hits, empty results, and failures |
 | `langchain_tool.py` | A LangChain tool that replaces `GoogleSearchAPIWrapper.results()` |
 | `compare_baseline.py` | Scores how many saved Custom Search URLs still appear in the new top 10 |
 | `ai_overview_example.py` | Reads the AI Overview and People Also Ask blocks from one query |
@@ -52,7 +52,7 @@ for item in res["items"]:
     print(item["title"], item["link"])
 ```
 
-At each call site, replace `except HttpError` with `except (httpx.HTTPError, ValueError, RuntimeError)`.
+Where you caught `HttpError`, catch `(httpx.HTTPError, ValueError, RuntimeError)` instead.
 
 ## Parameter mapping
 
@@ -71,7 +71,7 @@ At each call site, replace `except HttpError` with `except (httpx.HTTPError, Val
 | `safe=active` | `safe=active` |
 | `searchType=image` | `udm=2` (Google Images) |
 
-The adapter ignores `cx`, because there is no engine on the Google side. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
+The adapter ignores `cx` with a warning, because there is no engine on the Google side. If your engine searched a fixed list of sites, put them in the query as `(site:a.com OR site:b.com)`.
 
 ## Tests
 
