@@ -1,7 +1,5 @@
 # Google Custom Search JSON API Alternative
 
-Companion code for [Is There a Google Search API? Options After Custom Search](https://brightdata.com/blog/web-data/is-there-a-google-search-api) on the Bright Data blog.
-
 Google closed the Custom Search JSON API to new customers, with existing customers' access ending January 1, 2027. This repo moves Custom Search code to Google results fetched through the [Bright Data SERP API](https://brightdata.com/products/serp-api), with `cse.list()`-style parameters and `items` responses.
 
 ## Files
