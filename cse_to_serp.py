@@ -44,7 +44,7 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
         if not error and resp.status_code not in RETRY_STATUSES:
             break  # wrong key, zone, or URL, so retrying will not help
         if attempt < attempts - 1:
-            # Back off 15+ s before resending the same query.
+            # Back off before resending the same query.
             time.sleep(16 + attempt * 10)
     resp.raise_for_status()
     code = (resp.headers.get("x-brd-error-code")  # maps to the error catalog
