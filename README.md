@@ -38,7 +38,7 @@ Run the adapter's sample query.
 python cse_to_serp.py
 ```
 
-Swap a Custom Search call site.
+Replace a Custom Search call site.
 
 ```python
 from cse_to_serp import cse_list
