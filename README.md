@@ -1,4 +1,4 @@
-# Google Custom Search JSON API alternative
+# Google Custom Search JSON API Alternative
 
 Companion code for [Is There a Google Search API? Options After Custom Search](https://brightdata.com/blog/web-data/is-there-a-google-search-api) on the Bright Data blog.
 
