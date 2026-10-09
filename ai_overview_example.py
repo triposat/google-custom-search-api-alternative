@@ -1,4 +1,4 @@
-"""Read the AI Overview and People Also Ask blocks from one Google query."""
+"""Read the AI Overview and People Also Ask questions from one Google query."""
 
 from cse_to_serp import fetch_serp
 
@@ -7,7 +7,7 @@ page = fetch_serp({
     "gl": "us",
     "hl": "en",
     "brd_json": 1,
-    "brd_ai_overview": 2,  # asks for the AI Overview block
+    "brd_ai_overview": 2,  # requests the AI Overview
 })
 
 overview = page.get("ai_overview") or {}
