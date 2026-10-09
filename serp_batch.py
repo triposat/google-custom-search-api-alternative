@@ -19,7 +19,7 @@ if not API_KEY:
 ZONE = os.environ.get("BRIGHTDATA_SERP_ZONE", "serp_api1")
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 
-CACHE: dict[str, tuple[float, dict]] = {}  # swap in Redis to share it across workers
+CACHE: dict[str, tuple[float, dict]] = {}  # replace with Redis to share it across workers
 STATS = {"queries": 0, "cache_hits": 0, "empty": 0, "failed": 0}
 
 
@@ -71,7 +71,7 @@ async def search_many(queries, concurrency=20, deadline=150,
             try:
                 page = await asyncio.wait_for(
                     fetch(client, {"q": query, "brd_json": 1, **params}, ttl),
-                    timeout=deadline,  # caps the total time for one query
+                    timeout=deadline,  # limits the total time for one query
                 )
                 return query, page
             except (asyncio.TimeoutError, httpx.HTTPError, ValueError,
@@ -93,5 +93,5 @@ if __name__ == "__main__":
         "docker multi stage build", "sql window functions",
     ]
     asyncio.run(search_many(queries, gl="us", hl="en"))
-    asyncio.run(search_many(queries, gl="us", hl="en"))  # cache pass
+    asyncio.run(search_many(queries, gl="us", hl="en"))  # second run, served from the cache
     print(STATS)
