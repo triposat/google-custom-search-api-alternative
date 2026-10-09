@@ -39,7 +39,7 @@ def fetch_serp(params: dict, attempts: int = 4, timeout: float = 60) -> dict:
                 raise ValueError("Unexpected response: " + resp.text[:200])
             return page
         if not error and resp.status_code not in RETRY_STATUSES:
-            break  # wrong key, zone, or URL: retrying will not help
+            break  # wrong key, zone, or URL, so retrying will not help
         if attempt < attempts - 1:
             # Back off 15+ s before resending the same query.
             time.sleep(16 + attempt * 10)
@@ -54,8 +54,8 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
              fileType=None, dateRestrict=None, safe="off", searchType=None,
              attempts=4, timeout=60, **extra):
     """Accept cse.list() parameters, return a cse.list()-shaped dict."""
-    if extra.pop("cx", None):  # no engine ID: every call searches Google
-        warnings.warn("cx is ignored: add (site:a.com OR site:b.com) to q "
+    if extra.pop("cx", None):  # no engine ID, so every call searches Google
+        warnings.warn("cx is ignored. Add (site:a.com OR site:b.com) to q "
                       "if your engine searched a fixed list of sites")
     if extra:  # fail loudly instead of dropping a filter
         raise TypeError(f"No mapping for: {sorted(extra)}")
@@ -119,7 +119,7 @@ def cse_list(q, num=10, start=1, gl=None, hl=None, siteSearch=None,
 
 
 def image_list(params, num, start, attempts, timeout):
-    """Google Images: one request returns the whole image grid."""
+    """Google Images returns the whole image grid in one request."""
     params["udm"] = 2
     page = fetch_serp(params, attempts, timeout)
     images = [i for i in page.get("images") or [] if i.get("original_image")]

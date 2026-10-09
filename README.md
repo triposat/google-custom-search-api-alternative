@@ -32,21 +32,21 @@ Replace both values with your own. `.env.example` lists the same two variables. 
 
 ## Usage
 
-Run the adapter's sample query:
+Run the adapter's sample query.
 
 ```bash
 python cse_to_serp.py
 ```
 
-Swap a Custom Search call site:
+Swap a Custom Search call site.
 
 ```python
 from cse_to_serp import cse_list
 
-# Before: Google API client
+# Before, with the Google API client
 # res = service.cse().list(q=query, cx=CX, num=10).execute()
 
-# After: same core items fields, no engine ID, gl and hl set explicitly
+# After, with the same core items fields, no engine ID, and gl and hl set
 res = cse_list(q=query, num=10, gl="us", hl="en")
 for item in res["items"]:
     print(item["title"], item["link"])
@@ -75,7 +75,7 @@ The adapter ignores `cx`, because there is no engine on the Google side. If your
 
 ## Tests
 
-The tests replace the HTTP transport with a mock, so they run without an API key and without network access:
+The tests replace the HTTP transport with a mock, so they run without an API key and without network access.
 
 ```bash
 python -m pip install pytest
